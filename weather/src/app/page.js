@@ -1,31 +1,11 @@
-"use client"
+"use client" 
 import Image from "next/image";
 import styles from "./page.module.scss";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { UseMainContext } from "../../Context/MainContext";
 
 export default function Home() {
 
-  const [value, setValue] = useState('')
-  const [cityData, setCityData] = useState({})
-  const [loading, setLoading] = useState(false)
-
-  const KEY = 'ecaed94cf9c9ec88fffebfd48e38ce49'
-  const APIURL = `http://api.openweathermap.org/data/2.5/weather?q=${value}&appid=${KEY}`
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    setLoading(true)
-    axios.get(APIURL).then((res) => {
-      setCityData(res.data)
-      console.log(res.data)
-    })
-    setValue('')
-    setLoading(false)
-
-    console.log(e.target.value)
-
-  }
+ const { handleSubmit, kelvinToCelsius, cityData, value, setValue } = UseMainContext()
 
   
   return (
@@ -41,13 +21,15 @@ export default function Home() {
 
       {cityData.main ? (
         <div>
-          <img
+          <p>{cityData.name}</p>
+          <Image
             src={`http://openweathermap.org/img/w/${cityData.weather[0].icon}.png`}
             alt="weather status icon"
             className="weather-icon"
+            width={50}
+            height={50}
           />
-          <p>{cityData.main.temp}</p>
-          <p>{cityData.name}</p>
+          <p>{kelvinToCelsius(cityData.main.temp)}°C</p>
         </div>
         
       ) : (
